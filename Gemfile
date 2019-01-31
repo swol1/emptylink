@@ -39,9 +39,9 @@ group :development do
   gem 'capistrano', '~> 3.8', require: false
   gem 'capistrano-rails', '~> 1.2', require: false
   gem 'capistrano-passenger', '~> 0.2'
-  gem 'capistrano-rbenv', '~> 2.1'
-  gem 'capistrano-bundler', '~> 1.2'
-  
+  gem 'capistrano-rbenv', '~> 2.1', require: false
+  gem 'capistrano-bundler', '~> 1.2', require: false
+
   gem 'letter_opener'
   gem 'devise-bootstrapped', github: 'king601/devise-bootstrapped', branch: 'bootstrap4'
   gem 'guard'
