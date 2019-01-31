@@ -15,7 +15,7 @@
 # - web server (где живет nginx)
 # - database (где живет наш Postgres)
 # У нас все живет на одной машине.
-server 'tubi.ru', user: 'deploy', roles: %w{app db web}
+server 'emptybox.ru', user: 'deploy', roles: %w{app db web}
 
 
 # role-based syntax
