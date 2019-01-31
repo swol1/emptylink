@@ -1,0 +1,22 @@
+<div class="col-md-8">
+  <%= form_with(model: link, local: true) do |form| %>
+    <%= render partial: 'partials/model_errors', locals: {model: link} %>
+    <div class="form-group">
+      <%= form.label :url %>
+      <%= form.text_field :url, id: :link_url, class: 'form-control', placeholder: 'Destination URL' %>
+    </div>
+
+    <div class="form-group">
+      <%= form.label :name %>
+      <%= form.text_field :name, id: :link_name, class: 'form-control', placeholder: 'Leave blank for new random' %>
+      <small id="nameHelp" class="form-text text-muted">Short name for your
+        link, unique per domain
+      </small>
+    </div>
+    <div class="form-group">
+      <%= button_tag(type: 'submit', class: 'btn btn-primary') do %>
+        <%= fa_icon('anchor', text: 'Submit') %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
