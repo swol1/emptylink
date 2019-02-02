@@ -1,12 +1,8 @@
-# Main links controller: creates and runs all the links
-#
-# (c) goodprogrammer.ru
-#
 class LinksController < ApplicationController
   before_action :authenticate_user!, except: [:open, :new, :create]
   before_action :set_link, only: [:show, :edit, :update, :destroy]
+  before_action :set_linkdomain, only: [:create, :open]
   before_action :set_shortlink, only: [:open]
-  before_action :set_linkdomain, only: [:create]
 
   def open
     # increment clicks counter — in an atomic/thread-safe way
@@ -41,30 +37,22 @@ class LinksController < ApplicationController
     @link.user = current_user
     @link.domain = @domain
 
-    respond_to do |format|
-      if @link.save
-        # TBD: move to i18n strings
-        format.html {redirect_to @link, notice: 'Link was successfully created.'}
-        format.json {render :show, status: :created, location: @link}
-      else
-        format.html {render :new}
-        format.json {render json: @link.errors, status: :unprocessable_entity}
-      end
+    if @link.save && verify_recaptcha(model: @link)
+      # TBD: move to i18n strings
+      redirect_to @link, notice: 'Link was successfully created.'
+    else
+      render :new
     end
   end
 
   # PATCH/PUT /links/1
   # PATCH/PUT /links/1.json
   def update
-    respond_to do |format|
-      if @link.update(link_params)
-        # TBD: move to i18n strings
-        format.html {redirect_to @link, notice: 'Link was successfully updated.'}
-        format.json {render :show, status: :ok, location: @link}
-      else
-        format.html {render :edit}
-        format.json {render json: @link.errors, status: :unprocessable_entity}
-      end
+    if @link.update(link_params)
+      # TBD: move to i18n strings
+      redirect_to @link, notice: 'Link was successfully updated.'
+    else
+      render :edit
     end
   end
 
@@ -72,11 +60,8 @@ class LinksController < ApplicationController
   # DELETE /links/1.json
   def destroy
     @link.destroy
-    respond_to do |format|
-      # TBD: move to i18n strings
-      format.html {redirect_to links_url, notice: 'Link was successfully destroyed.'}
-      format.json {head :no_content}
-    end
+    # TBD: move to i18n strings
+    redirect_to links_url, notice: 'Link was successfully destroyed.'
   end
 
   private
@@ -92,12 +77,12 @@ class LinksController < ApplicationController
   # Loads Link model according to domain and param[:short_url] option, see routes.rb
   def set_shortlink
     name = params[:short_url]
-    # domain = // TBD: only tubi.ru domain for now
-    @link = Link.where(name: name, domain: nil).take
+    @link = Link.where(name: name, domain: @domain).take
   end
 
   # set Link domain name (for custom domains feature)
   # empty string by default -- meaning current app tubi.ru domain
+  # TBD: only tubi.ru domain for now
   def set_linkdomain
     @domain = nil
   end

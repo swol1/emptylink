@@ -23,6 +23,8 @@ source 'https://rails-assets.org' do
   gem 'rails-assets-tether', '>= 1.3.3'
 end
 
+gem 'recaptcha', require: 'recaptcha/rails'
+
 group :production do
   gem 'pg'
 end
