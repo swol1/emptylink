@@ -2,11 +2,12 @@ require 'rails_helper'
 
 RSpec.describe Link, type: :model do
   context 'Unique name specs' do
-    let(:link) {Link.create!(url: 'goodprogrammer.ru')}
+    let(:user) {User.create(email: 'hi@goodprogrammer.ru')}
+    let(:link) {Link.create(url: 'goodprogrammer.ru', user: user)}
 
     it 'fails gracefully after 5 attempts' do
-      allow(Link).to receive_message_chain(:where, :exists?).and_return(true)
-      allow(Link).to receive_message_chain(:where, :count).and_return(501)
+      allow(Link).to receive(:random_token).and_return('very_random_string')
+      link
 
       bad_link = Link.create(url: 'goodprogrammer.ru')
       expect(bad_link.name).to be_nil

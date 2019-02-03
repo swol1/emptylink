@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe LinksController, type: :controller do
   let(:user) {User.create!(email: 'test@test.ru', password: '123456')}
-  let(:valid_attributes) {{'url' => 'l.goodprogrammer.ru'}}
+  let(:valid_attributes) {{'url' => 'l.goodprogrammer.ru', 'user_id' => user.id}}
   let(:invalid_attributes) {{'url' => '/l.goodprogrammer.ru'}}
   let(:link) {Link.create!(valid_attributes)}
 
@@ -18,15 +18,14 @@ RSpec.describe LinksController, type: :controller do
     end
   end
 
-
   describe 'PUT #update' do
     before(:each) {sign_in user}
+
     let(:new_attributes) {{'name' => '123_a', 'url' => 'http://www.ya.ru'}}
 
-    it 'updates the requested link & redirects to :link' do
+    it 'updates the requested link & redirects to its page' do
       put :update, params: {id: link.to_param, link: new_attributes}
       link.reload
-      expect(assigns(:link)).to eq(link)
       expect(link.attributes).to include(new_attributes)
       expect(response).to redirect_to(link)
     end
@@ -53,30 +52,30 @@ RSpec.describe LinksController, type: :controller do
   end
 
   describe 'POST #create' do
-    it 'creates a new valid Link with User' do
-      sign_in user
-      post :create, params: {link: valid_attributes}
-      expect(Link.last.user).to eq user
+    context 'without authenticated user' do
+      it 'doesnt create a Link w/o User' do
+        expect {
+          post :create, params: {link: valid_attributes}
+        }.not_to change(Link, :count)
+        expect(response).to redirect_to(new_user_session_path)
+      end
     end
 
-    it 'creates a new valid Link w/o User' do
-      expect {
+    context 'with authenticated user' do
+      before(:each) {sign_in user}
+
+      it 'creates new Link with User' do
         post :create, params: {link: valid_attributes}
-      }.to change(Link, :count).by(1)
-    end
+        link = Link.find(assigns(:link).id)
+        expect(link.user).to eq user
+        expect(response).to redirect_to(link)
+      end
 
-    it 'assigns a newly created link as @link' do
-      post :create, params: {link: valid_attributes}
-      expect(assigns(:link)).to be_a(Link)
-      expect(assigns(:link)).to be_persisted
-      expect(assigns(:link).user).to be_nil
-      expect(response).to redirect_to(Link.last)
-    end
-
-    it 'assigns a newly created but unsaved link as @link' do
-      post :create, params: {link: invalid_attributes}
-      expect(assigns(:link)).to be_a_new(Link)
-      expect(response).to render_template('new')
+      it 'assigns a newly created but unsaved link as @link' do
+        post :create, params: {link: invalid_attributes}
+        expect(assigns(:link)).to be_a_new(Link)
+        expect(response).to render_template('new')
+      end
     end
   end
 end

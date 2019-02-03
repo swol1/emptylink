@@ -14,5 +14,8 @@ en:
           attributes:
             name:
               invalid: "have to be alphanumeric symbols and _"
-              stopwords: "can't be emptybox.ru webapp url (users, links, etc.)"
+              stopwords: "can't be tubi.ru webapp url (users, links, etc.)"
               not_generated: "couldn't be made unique, try again or type your own"
+
+  pundit:
+    not_authorized: 'This is not allowed for you!'

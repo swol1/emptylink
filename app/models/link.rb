@@ -7,13 +7,10 @@ class Link < ApplicationRecord
   # https://github.com/rails/rails/blob/e20dd73df42d63b206d221e2258cc6dc7b1e6068/railties/lib/rails/tasks/routes.rake#L2
   STOPWORDS = %w(links users user link)
 
-  Rails.application.routes.url_helpers
-
-
   # https://github.com/ruby/ruby/blob/trunk/lib/uri/rfc2396_parser.rb#L21-L56
   DOMAIN_REGEXP = /\A#{URI::RFC2396_REGEXP::PATTERN::HOSTNAME}\Z/
 
-  belongs_to :user, optional: true
+  belongs_to :user
 
   validates :name, uniqueness: {scope: [:domain]}
   validates :name, length: {maximum: 90}
@@ -30,11 +27,11 @@ class Link < ApplicationRecord
   before_validation :set_unique_name, on: :create
   before_validation :downcase_domain
 
+  private
+
   def set_unique_name
     self.name = unique_url(domain) unless name.present?
   end
-
-  private
 
   def downcase_domain
     self.domain = domain.downcase if domain
@@ -63,15 +60,16 @@ class Link < ApplicationRecord
 
     # try to do our best skip no more than 5 conflicts
     5.times do
-      token = SecureRandom.urlsafe_base64(key_length).tr('lIO0-', 'sxyz_')
+      token = Link.random_token(key_length)
       return token unless Link.where(name: token, domain: domain).exists?
     end
-    # our model is invalid at this point, must do something
+    # our model is invalid at this point, escalate to user
     errors.add(:name, :not_generated)
     nil
   end
 
-  # idea: http://stackoverflow.com/a/7167988
+  # idea from http://stackoverflow.com/a/7167988
+  # Just a prototype, need to be improved in many ways.
   def url_allowed
     unless Link.valid_url?(url)
       http_url = "http://#{url}"
@@ -89,5 +87,9 @@ class Link < ApplicationRecord
     !uri.host.nil?
   rescue URI::InvalidURIError
     false
+  end
+
+  def self.random_token(key_length)
+    SecureRandom.urlsafe_base64(key_length).tr('lIO0-', 'sxyz_')
   end
 end

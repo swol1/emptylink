@@ -1,3 +1,8 @@
+# (c) goodprogrammer.ru
+#
+# Унаследовали контроллер регистраций от девайза, чтобы
+# добавить проверку капчи перед созданием юзера
+# https://github.com/plataformatec/devise/wiki/How-To:-Use-Recaptcha-with-Devise
 class RegistrationsController < Devise::RegistrationsController
   prepend_before_action :check_captcha, only: [:create]
 
