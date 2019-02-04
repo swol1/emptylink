@@ -1,5 +1,5 @@
 # config valid only for current version of Capistrano
-lock '3.8.2'
+lock '3.11.0'
 
 set :application, 'emptylink'
 set :repo_url, 'https://github.com/swol1/emptylink.git'
