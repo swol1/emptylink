@@ -7,15 +7,17 @@ end
 
 gem 'rails', '~> 5.1.1'
 gem 'puma', '~> 3.7'
+gem "activejob", ">= 5.1.6.1"
 
 gem 'devise', '~> 4.3.0'
 
 gem 'jquery-rails'
-gem 'bootstrap', '~> 4.0.0.alpha6'
+gem 'bootstrap', '~> 4.1.2'
 gem 'font-awesome-rails'
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'pundit', '>= 1.1'
+gem 'resque', '~> 1.27'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
@@ -44,6 +46,7 @@ group :development do
   gem 'capistrano-passenger', '~> 0.2'
   gem 'capistrano-rbenv', '~> 2.1', require: false
   gem 'capistrano-bundler', '~> 1.2', require: false
+  gem 'capistrano-resque', '~> 0.2.3', require: false
 
   gem 'letter_opener'
   gem 'devise-bootstrapped', github: 'king601/devise-bootstrapped', branch: 'bootstrap4'

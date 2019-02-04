@@ -1,5 +1,5 @@
 # config valid only for current version of Capistrano
-lock '3.8.1'
+lock '3.8.2'
 
 set :application, 'emptylink'
 set :repo_url, 'https://github.com/swol1/emptylink.git'
@@ -10,6 +10,10 @@ append :linked_files, 'config/database.yml', 'config/secrets.yml'
 append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system', 'public/uploads'
 
 set :rbenv_path, '/home/deploy/.rbenv'
+
+after 'deploy:restart', 'resque:restart'
+
+set :branch, ENV['branch'] if ENV['branch']
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
