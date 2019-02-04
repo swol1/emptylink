@@ -320,7 +320,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activejob (>= 5.1.6.1)
   bootstrap (~> 4.1.2)
   byebug
   capistrano (~> 3.8)
