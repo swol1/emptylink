@@ -7,7 +7,6 @@ end
 
 gem 'rails', '~> 5.1.1'
 gem 'puma', '~> 3.7'
-gem "activejob", ">= 5.1.6.1"
 
 gem 'devise', '~> 4.3.0'
 
