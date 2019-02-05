@@ -5,10 +5,10 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-gem 'rails', '~> 5.1.1'
+gem 'rails', '~> 5.2.2'
 gem 'puma', '~> 3.7'
 
-gem 'devise', '~> 4.3.0'
+gem 'devise', '~> 4.4.0'
 
 gem 'jquery-rails'
 gem 'bootstrap', '~> 4.1.2'
@@ -32,7 +32,7 @@ group :production do
 end
 
 group :development, :test do
-  gem 'sqlite3'
+  gem 'sqlite3', '~> 1.3.6'
   gem 'rspec-rails', '~> 3.5'
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'shoulda-matchers', '4.0.0.rc1'
